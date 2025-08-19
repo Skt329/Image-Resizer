@@ -119,16 +119,18 @@ export default function Home() {
           </motion.div>
 
           {imageData && (
-            <>
-              <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Controls */}
+              <div className="space-y-6">
                 <RequirementsSection
                   requirements={requirements}
                   onRequirementsChange={setRequirements}
                   imageData={imageData}
                 />
-              </motion.div>
+              </div>
 
-              <motion.div variants={itemVariants}>
+              {/* Right Column - Preview & Processing */}
+              <div className="space-y-6">
                 <PreviewSection
                   originalImage={imageData}
                   processedImage={processedImage}
@@ -136,14 +138,12 @@ export default function Home() {
                   error={error}
                   onProcess={processImage}
                 />
-              </motion.div>
 
-              {processedImage && (
-                <motion.div variants={itemVariants}>
+                {processedImage && (
                   <DownloadSection processedImage={processedImage} />
-                </motion.div>
-              )}
-            </>
+                )}
+              </div>
+            </motion.div>
           )}
         </motion.div>
       </main>

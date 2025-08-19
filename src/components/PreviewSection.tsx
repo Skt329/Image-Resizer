@@ -140,20 +140,7 @@ export function PreviewSection({
               </div>
             </div>
             
-            <div className="grid grid-cols-3 gap-2 text-sm">
-              <div className="text-center p-2 bg-gray-50 rounded">
-                <div className="font-medium text-gray-800">{originalInfo.size}</div>
-                <div className="text-gray-500">Size</div>
-              </div>
-              <div className="text-center p-2 bg-gray-50 rounded">
-                <div className="font-medium text-gray-800">{originalInfo.dimensions}</div>
-                <div className="text-gray-500">Dimensions</div>
-              </div>
-              <div className="text-center p-2 bg-gray-50 rounded">
-                <div className="font-medium text-gray-800">{originalInfo.dpi}</div>
-                <div className="text-gray-500">DPI</div>
-              </div>
-            </div>
+
           </motion.div>
 
           {/* Processed Image */}
@@ -194,63 +181,11 @@ export function PreviewSection({
               )}
             </div>
             
-            {processedImage ? (
-              <div className="grid grid-cols-3 gap-2 text-sm">
-                <div className="text-center p-2 bg-green-50 rounded border border-green-200">
-                  <div className="font-medium text-green-800">{processedInfo!.size}</div>
-                  <div className="text-green-600">Size</div>
-                </div>
-                <div className="text-center p-2 bg-green-50 rounded border border-green-200">
-                  <div className="font-medium text-green-800">{processedInfo!.dimensions}</div>
-                  <div className="text-green-600">Dimensions</div>
-                </div>
-                <div className="text-center p-2 bg-green-50 rounded border border-green-200">
-                  <div className="font-medium text-green-800">{processedInfo!.dpi}</div>
-                  <div className="text-green-600">DPI</div>
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-3 gap-2 text-sm">
-                <div className="text-center p-2 bg-gray-50 rounded">
-                  <div className="font-medium text-gray-400">--</div>
-                  <div className="text-gray-400">Size</div>
-                </div>
-                <div className="text-center p-2 bg-gray-50 rounded">
-                  <div className="font-medium text-gray-400">--</div>
-                  <div className="text-gray-400">Dimensions</div>
-                </div>
-                <div className="text-center p-2 bg-gray-50 rounded">
-                  <div className="font-medium text-gray-400">--</div>
-                  <div className="text-gray-400">DPI</div>
-                </div>
-              </div>
-            )}
+
           </motion.div>
         </div>
 
-        {/* Processing Tips */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200"
-        >
-          <h4 className="font-semibold text-gray-800 mb-2">💡 Processing Tips</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-            <div>
-              <strong>File Size:</strong> Lower sizes mean more compression and potentially lower quality
-            </div>
-            <div>
-              <strong>DPI:</strong> Higher DPI is better for printing but increases file size
-            </div>
-            <div>
-              <strong>Format:</strong> JPEG for photos, PNG for graphics with transparency
-            </div>
-            <div>
-              <strong>Dimensions:</strong> Maintain aspect ratio for best results
-            </div>
-          </div>
-        </motion.div>
+        
       </CardContent>
     </Card>
   );

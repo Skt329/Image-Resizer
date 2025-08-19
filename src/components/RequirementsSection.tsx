@@ -101,41 +101,41 @@ export function RequirementsSection({
         </p>
       </CardHeader>
       
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         {/* Original Image Info */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="p-4 bg-blue-50 border border-blue-200 rounded-lg"
+          className="p-3 bg-blue-50 border border-blue-200 rounded-lg"
         >
           <div className="flex items-center space-x-2 mb-2">
-            <ImageIcon className="h-5 w-5 text-blue-600" />
-            <span className="font-medium text-blue-800">Original Image Specifications</span>
+            <ImageIcon className="h-4 w-4 text-blue-600" />
+            <span className="text-sm font-medium text-blue-800">Original Image Specifications</span>
           </div>
-                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-             <div>
-               <span className="text-blue-600">Size:</span>
-               <div className="font-medium">{imageData.size.toFixed(1)} KB</div>
-             </div>
-             <div>
-               <span className="text-blue-600">Dimensions:</span>
-               <div className="font-medium">
-                 {imageData.width} × {imageData.height} px
-                 <div className="text-xs text-blue-500">
-                   ({pixelsToCm(imageData.width).toFixed(1)} × {pixelsToCm(imageData.height).toFixed(1)} cm)
-                 </div>
-               </div>
-             </div>
-             <div>
-               <span className="text-blue-600">DPI:</span>
-               <div className="font-medium">{imageData.dpi || "Unknown"}</div>
-             </div>
-             <div>
-               <span className="text-blue-600">Format:</span>
-               <div className="font-medium">{imageData.file.type.split('/')[1].toUpperCase()}</div>
-             </div>
-           </div>
+          <div className="grid grid-cols-2 gap-3 text-xs">
+            <div>
+              <span className="text-blue-600">Size:</span>
+              <div className="font-medium">{imageData.size.toFixed(1)} KB</div>
+            </div>
+            <div>
+              <span className="text-blue-600">Dimensions:</span>
+              <div className="font-medium">
+                {imageData.width} × {imageData.height} px
+                <div className="text-xs text-blue-500">
+                  ({pixelsToCm(imageData.width).toFixed(1)} × {pixelsToCm(imageData.height).toFixed(1)} cm)
+                </div>
+              </div>
+            </div>
+            <div>
+              <span className="text-blue-600">DPI:</span>
+              <div className="font-medium">{imageData.dpi || "Unknown"}</div>
+            </div>
+            <div>
+              <span className="text-blue-600">Format:</span>
+              <div className="font-medium">{imageData.file.type.split('/')[1].toUpperCase()}</div>
+            </div>
+          </div>
           <p className="text-blue-600 text-xs mt-2">
             💡 Values below are pre-filled based on your original image. Adjust them as needed for your requirements.
           </p>
@@ -146,16 +146,16 @@ export function RequirementsSection({
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="space-y-4"
+          className="space-y-3"
         >
           <div className="flex items-center space-x-2">
-            <FileText className="h-5 w-5 text-green-600" />
-            <Label className="text-lg font-semibold">File Size Range</Label>
+            <FileText className="h-4 w-4 text-green-600" />
+            <Label className="text-base font-semibold">File Size Range</Label>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="min-size">Minimum Size (KB)</Label>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <Label htmlFor="min-size" className="text-sm">Minimum Size (KB)</Label>
               <Input
                 id="min-size"
                 type="number"
@@ -163,12 +163,12 @@ export function RequirementsSection({
                 max="1000"
                 value={requirements.minSize}
                 onChange={(e) => handleChange("minSize", parseInt(e.target.value) || 1)}
-                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-9"
               />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="max-size">Maximum Size (KB)</Label>
+            <div className="space-y-1">
+              <Label htmlFor="max-size" className="text-sm">Maximum Size (KB)</Label>
               <Input
                 id="max-size"
                 type="number"
@@ -176,16 +176,16 @@ export function RequirementsSection({
                 max="1000"
                 value={requirements.maxSize}
                 onChange={(e) => handleChange("maxSize", parseInt(e.target.value) || 1)}
-                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-9"
               />
             </div>
           </div>
           
           <div className="flex items-center space-x-2">
-            <Badge variant="secondary" className="bg-green-100 text-green-800">
+            <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
               Target: {getFileSizeRange()}
             </Badge>
-            <span className="text-sm text-gray-500">
+            <span className="text-xs text-gray-500">
               Original: {imageData.size.toFixed(1)} KB
             </span>
           </div>
@@ -199,24 +199,24 @@ export function RequirementsSection({
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="space-y-4"
+          className="space-y-3"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Ruler className="h-5 w-5 text-blue-600" />
-              <Label className="text-lg font-semibold">Dimensions</Label>
+              <Ruler className="h-4 w-4 text-blue-600" />
+              <Label className="text-base font-semibold">Dimensions</Label>
             </div>
             
             {/* Unit Toggle */}
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Units:</span>
+              <span className="text-xs text-gray-600">Units:</span>
               <div className="flex bg-gray-100 rounded-lg p-1">
                 <Button
                   type="button"
                   variant={unitMode === "px" ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setUnitMode("px")}
-                  className="h-7 px-3 text-xs"
+                  className="h-6 px-2 text-xs"
                 >
                   Pixels
                 </Button>
@@ -225,7 +225,7 @@ export function RequirementsSection({
                   variant={unitMode === "cm" ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setUnitMode("cm")}
-                  className="h-7 px-3 text-xs"
+                  className="h-6 px-2 text-xs"
                 >
                   Centimeters
                 </Button>
@@ -234,10 +234,10 @@ export function RequirementsSection({
           </div>
           
           {/* Unit Conversion Info */}
-          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg">
             <div className="flex items-center space-x-2 text-amber-800">
-              <Maximize2 className="h-4 w-4" />
-              <span className="text-sm font-medium">Unit Conversion</span>
+              <Maximize2 className="h-3 w-3" />
+              <span className="text-xs font-medium">Unit Conversion</span>
             </div>
             <p className="text-xs text-amber-700 mt-1">
               💡 Switch between pixels and centimeters. Conversion is based on 96 DPI (standard screen resolution). 
@@ -245,9 +245,9 @@ export function RequirementsSection({
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="width">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="space-y-1">
+              <Label htmlFor="width" className="text-xs">
                 Width ({unitMode === "px" ? "px" : "cm"})
               </Label>
               <Input
@@ -261,7 +261,7 @@ export function RequirementsSection({
                   const value = unitMode === "px" ? parseInt(e.target.value) || 1 : parseFloat(e.target.value) || 0.1;
                   handleDimensionChange("width", value, unitMode);
                 }}
-                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-9 text-sm"
               />
               {unitMode === "cm" && (
                 <p className="text-xs text-gray-500">
@@ -270,8 +270,8 @@ export function RequirementsSection({
               )}
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="height">
+            <div className="space-y-1">
+              <Label htmlFor="height" className="text-xs">
                 Height ({unitMode === "px" ? "px" : "cm"})
               </Label>
               <Input
@@ -285,7 +285,7 @@ export function RequirementsSection({
                   const value = unitMode === "px" ? parseInt(e.target.value) || 1 : parseFloat(e.target.value) || 0.1;
                   handleDimensionChange("height", value, unitMode);
                 }}
-                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-9 text-sm"
               />
               {unitMode === "cm" && (
                 <p className="text-xs text-gray-500">
@@ -294,30 +294,30 @@ export function RequirementsSection({
               )}
             </div>
             
-            <div className="space-y-2">
-              <Label>Aspect Ratio</Label>
-              <div className="h-10 flex items-center justify-center bg-gray-50 rounded-md border border-gray-300">
-                <span className="text-lg font-mono text-gray-700">{getAspectRatio()}</span>
-              </div>
-              <button
-                onClick={() => handleChange("aspectRatioLocked", !requirements.aspectRatioLocked)}
-                className="flex items-center justify-center space-x-2 text-xs w-full p-2 rounded-md hover:bg-gray-100 transition-colors duration-200 group"
-                title={requirements.aspectRatioLocked ? "Click to unlock aspect ratio" : "Click to lock aspect ratio"}
-              >
-                {requirements.aspectRatioLocked ? (
-                  <Lock className="h-3 w-3 text-green-600 group-hover:text-green-700" />
-                ) : (
-                  <Unlock className="h-3 w-3 text-gray-400 group-hover:text-gray-600" />
-                )}
-                <span className={`${requirements.aspectRatioLocked ? "text-green-600" : "text-gray-500"} group-hover:font-medium`}>
-                  {requirements.aspectRatioLocked ? "Locked" : "Unlocked"}
-                </span>
-              </button>
-            </div>
+                         <div className="space-y-1">
+               <Label className="text-xs">Aspect Ratio</Label>
+               <div className="h-9 flex items-center justify-center bg-gray-50 rounded-md border border-gray-300">
+                 <span className="text-sm font-mono text-gray-700">{getAspectRatio()}</span>
+               </div>
+               <button
+                 onClick={() => handleChange("aspectRatioLocked", !requirements.aspectRatioLocked)}
+                 className="flex items-center justify-center space-x-1 text-xs w-full p-1 rounded-md hover:bg-gray-100 transition-colors duration-200 group"
+                 title={requirements.aspectRatioLocked ? "Click to unlock aspect ratio" : "Click to lock aspect ratio"}
+               >
+                 {requirements.aspectRatioLocked ? (
+                   <Lock className="h-3 w-3 text-green-600 group-hover:text-green-700 flex-shrink-0" />
+                 ) : (
+                   <Unlock className="h-3 w-3 text-gray-400 group-hover:text-gray-600 flex-shrink-0" />
+                 )}
+                 <span className={`${requirements.aspectRatioLocked ? "text-green-600" : "text-gray-500"} group-hover:font-medium text-xs truncate`}>
+                   {requirements.aspectRatioLocked ? "Locked" : "Unlocked"}
+                 </span>
+               </button>
+             </div>
           </div>
           
           <div className="flex items-center space-x-2">
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
               Target: {requirements.width} × {requirements.height} px
               {unitMode === "cm" && (
                 <span className="ml-2 text-xs">
@@ -325,17 +325,17 @@ export function RequirementsSection({
                 </span>
               )}
             </Badge>
-            <span className="text-sm text-gray-500">
+            <span className="text-xs text-gray-500">
               Original: {imageData.width} × {imageData.height} px
               <span className="ml-1 text-xs">
                 ({pixelsToCm(imageData.width).toFixed(1)} × {pixelsToCm(imageData.height).toFixed(1)} cm)
               </span>
             </span>
           </div>
-          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="p-2 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="flex items-center space-x-2 text-blue-800 mb-1">
-              <Maximize2 className="h-4 w-4" />
-              <span className="text-sm font-medium">Aspect Ratio Control</span>
+              <Maximize2 className="h-3 w-3" />
+              <span className="text-xs font-medium">Aspect Ratio Control</span>
             </div>
             <p className="text-xs text-blue-700">
               {requirements.aspectRatioLocked 
@@ -354,16 +354,16 @@ export function RequirementsSection({
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          className="space-y-4"
+          className="space-y-3"
         >
           <div className="flex items-center space-x-2">
-            <ImageIcon className="h-5 w-5 text-purple-600" />
-            <Label className="text-lg font-semibold">Quality & Format</Label>
+            <ImageIcon className="h-4 w-4 text-purple-600" />
+            <Label className="text-base font-semibold">Quality & Format</Label>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label htmlFor="dpi">DPI (Dots Per Inch)</Label>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="dpi" className="text-sm">DPI (Dots Per Inch)</Label>
               <div className="space-y-2">
                 <Slider
                   id="dpi"
@@ -374,7 +374,7 @@ export function RequirementsSection({
                   onValueChange={(value) => handleChange("dpi", value[0])}
                   className="w-full"
                 />
-                <div className="flex justify-between text-sm text-gray-500">
+                <div className="flex justify-between text-xs text-gray-500">
                   <span>72 DPI</span>
                   <span className="font-medium">{requirements.dpi} DPI</span>
                   <span>600 DPI</span>
@@ -385,59 +385,59 @@ export function RequirementsSection({
               </p>
             </div>
             
-            <div className="space-y-3">
-              <Label htmlFor="format">Output Format</Label>
-              <Select
-                value={requirements.format}
-                onValueChange={(value) => handleChange("format", value as "jpg" | "png")}
-              >
-                <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="jpg">JPEG (Smaller size, no transparency)</SelectItem>
-                  <SelectItem value="png">PNG (Larger size, supports transparency)</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-gray-500">
-                JPEG for photos, PNG for graphics with transparency
-              </p>
-            </div>
+                         <div className="space-y-2">
+               <Label htmlFor="format" className="text-sm">Output Format</Label>
+               <Select
+                 value={requirements.format}
+                 onValueChange={(value) => handleChange("format", value as "jpg" | "png")}
+               >
+                                   <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 h-9 w-full [&>svg]:absolute [&>svg]:right-3 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2">
+                    <SelectValue />
+                  </SelectTrigger>
+                                   <SelectContent>
+                    <SelectItem value="jpg">JPEG (Smaller, no transparency)</SelectItem>
+                    <SelectItem value="png">PNG (Larger, supports transparency)</SelectItem>
+                  </SelectContent>
+               </Select>
+               <p className="text-xs text-gray-500">
+                 JPEG for photos, PNG for graphics with transparency
+               </p>
+             </div>
           </div>
         </motion.div>
 
         
 
-                 {/* Summary */}
+                                  {/* Summary */}
          <motion.div
            initial={{ opacity: 0, y: 20 }}
            animate={{ opacity: 1, y: 0 }}
            transition={{ delay: 0.4 }}
-           className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200"
+           className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200"
          >
-          <h4 className="font-semibold text-gray-800 mb-2">Processing Summary</h4>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <div>
-              <span className="text-gray-600">Size:</span>
-              <div className="font-medium">{getFileSizeRange()}</div>
-            </div>
-            <div>
-              <span className="text-gray-600">Dimensions:</span>
-              <div className="font-medium">{requirements.width} × {requirements.height} px</div>
-            </div>
-            <div>
-              <span className="text-gray-600">DPI:</span>
-              <div className="font-medium">{requirements.dpi}</div>
-            </div>
-            <div>
-              <span className="text-gray-600">Format:</span>
-              <div className="font-medium uppercase">{requirements.format}</div>
-            </div>
-          </div>
-          
-                     <div className="mt-3 p-3 bg-white/60 rounded-lg border border-blue-200">
+           <h4 className="font-semibold text-gray-800 mb-2 text-sm">Processing Summary</h4>
+           <div className="grid grid-cols-2 gap-3 text-xs">
+             <div>
+               <span className="text-gray-600">Size:</span>
+               <div className="font-medium">{getFileSizeRange()}</div>
+             </div>
+             <div>
+               <span className="text-gray-600">Dimensions:</span>
+               <div className="font-medium">{requirements.width} × {requirements.height} px</div>
+             </div>
+             <div>
+               <span className="text-gray-600">DPI:</span>
+               <div className="font-medium">{requirements.dpi}</div>
+             </div>
+             <div>
+               <span className="text-gray-600">Format:</span>
+               <div className="font-medium uppercase">{requirements.format}</div>
+             </div>
+           </div>
+           
+           <div className="mt-2 p-2 bg-white/60 rounded-lg border border-blue-200">
              <div className="text-xs text-blue-700 font-medium mb-1">📊 Original vs Target Comparison</div>
-             <div className="grid grid-cols-2 gap-4 text-xs">
+             <div className="grid grid-cols-2 gap-2 text-xs">
                <div>
                  <span className="text-gray-600">Original Size:</span>
                  <div className="font-medium">{imageData.size.toFixed(1)} KB</div>
@@ -466,7 +466,31 @@ export function RequirementsSection({
                </div>
              </div>
            </div>
-        </motion.div>
+         </motion.div>
+
+         {/* Processing Tips */}
+         <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.5 }}
+           className="p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200"
+         >
+           <h4 className="font-semibold text-gray-800 mb-2 text-sm">💡 Processing Tips</h4>
+           <div className="grid grid-cols-1 gap-3 text-xs text-gray-600">
+             <div>
+               <strong>File Size:</strong> Lower sizes mean more compression and potentially lower quality
+             </div>
+             <div>
+               <strong>DPI:</strong> Higher DPI is better for printing but increases file size
+             </div>
+             <div>
+               <strong>Format:</strong> JPEG for photos, PNG for graphics with transparency
+             </div>
+             <div>
+               <strong>Dimensions:</strong> Maintain aspect ratio for best results
+             </div>
+           </div>
+         </motion.div>
       </CardContent>
     </Card>
   );
