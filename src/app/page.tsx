@@ -25,25 +25,39 @@ export default function Home() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleImageUpload = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        setImageData({
-          file,
-          url: e.target?.result as string,
-          width: img.naturalWidth,
-          height: img.naturalHeight,
-          size: file.size / 1024, // Convert to KB
-          name: file.name
-        });
-        setError(null);
-        setProcessedImage(null);
+  const handleImageUpload = async (file: File) => {
+    try {
+      const processor = new ImageProcessor();
+      const imageInfo = await processor.getImageInfo(file);
+      
+      const newImageData: ImageData = {
+        file,
+        url: URL.createObjectURL(file),
+        width: imageInfo.width,
+        height: imageInfo.height,
+        size: imageInfo.size,
+        name: file.name,
+        dpi: imageInfo.dpi
       };
-      img.src = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
+      
+      setImageData(newImageData);
+      
+      // Update requirements to match the original image dimensions and DPI
+      setRequirements({
+        minSize: Math.max(20, Math.floor(imageInfo.size * 0.8)), // 80% of original size as min
+        maxSize: Math.max(30, Math.ceil(imageInfo.size * 1.2)), // 120% of original size as max
+        width: imageInfo.width,
+        height: imageInfo.height,
+        dpi: imageInfo.dpi || 72,
+        format: "jpg"
+      });
+      
+      setError(null);
+      setProcessedImage(null);
+    } catch (error) {
+      console.error("Error processing image:", error);
+      setError("Failed to process image. Please try again.");
+    }
   };
 
   const processImage = async () => {

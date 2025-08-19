@@ -49,6 +49,40 @@ export function RequirementsSection({
       </CardHeader>
       
       <CardContent className="space-y-6">
+        {/* Original Image Info */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="p-4 bg-blue-50 border border-blue-200 rounded-lg"
+        >
+          <div className="flex items-center space-x-2 mb-2">
+            <ImageIcon className="h-5 w-5 text-blue-600" />
+            <span className="font-medium text-blue-800">Original Image Specifications</span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <div>
+              <span className="text-blue-600">Size:</span>
+              <div className="font-medium">{imageData.size.toFixed(1)} KB</div>
+            </div>
+            <div>
+              <span className="text-blue-600">Dimensions:</span>
+              <div className="font-medium">{imageData.width} × {imageData.height} px</div>
+            </div>
+            <div>
+              <span className="text-blue-600">DPI:</span>
+              <div className="font-medium">{imageData.dpi || "Unknown"}</div>
+            </div>
+            <div>
+              <span className="text-blue-600">Format:</span>
+              <div className="font-medium">{imageData.file.type.split('/')[1].toUpperCase()}</div>
+            </div>
+          </div>
+          <p className="text-blue-600 text-xs mt-2">
+            💡 Values below are pre-filled based on your original image. Adjust them as needed for your requirements.
+          </p>
+        </motion.div>
+
         {/* File Size Requirements */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -94,9 +128,12 @@ export function RequirementsSection({
               Target: {getFileSizeRange()}
             </Badge>
             <span className="text-sm text-gray-500">
-              Current: {imageData.size.toFixed(1)} KB
+              Original: {imageData.size.toFixed(1)} KB
             </span>
           </div>
+          <p className="text-xs text-gray-500">
+            Size range is automatically set to 80%-120% of your original image size
+          </p>
         </motion.div>
 
         {/* Dimensions */}
@@ -151,9 +188,12 @@ export function RequirementsSection({
               Target: {requirements.width} × {requirements.height} px
             </Badge>
             <span className="text-sm text-gray-500">
-              Current: {imageData.width} × {imageData.height} px
+              Original: {imageData.width} × {imageData.height} px
             </span>
           </div>
+          <p className="text-xs text-gray-500">
+            Dimensions are pre-filled with your original image size
+          </p>
         </motion.div>
 
         {/* DPI and Format */}
@@ -188,7 +228,7 @@ export function RequirementsSection({
                 </div>
               </div>
               <p className="text-xs text-gray-500">
-                Higher DPI = Better print quality, larger file size
+                Higher DPI = Better print quality, larger file size. DPI is pre-filled based on your original image.
               </p>
             </div>
             
@@ -237,6 +277,27 @@ export function RequirementsSection({
             <div>
               <span className="text-gray-600">Format:</span>
               <div className="font-medium uppercase">{requirements.format}</div>
+            </div>
+          </div>
+          <div className="mt-3 p-3 bg-white/60 rounded-lg border border-blue-200">
+            <div className="text-xs text-blue-700 font-medium mb-1">📊 Original vs Target Comparison</div>
+            <div className="grid grid-cols-2 gap-4 text-xs">
+              <div>
+                <span className="text-gray-600">Original Size:</span>
+                <div className="font-medium">{imageData.size.toFixed(1)} KB</div>
+              </div>
+              <div>
+                <span className="text-gray-600">Target Size:</span>
+                <div className="font-medium">{getFileSizeRange()}</div>
+              </div>
+              <div>
+                <span className="text-gray-600">Original Dimensions:</span>
+                <div className="font-medium">{imageData.width} × {imageData.height} px</div>
+              </div>
+              <div>
+                <span className="text-gray-600">Target Dimensions:</span>
+                <div className="font-medium">{requirements.width} × {requirements.height} px</div>
+              </div>
             </div>
           </div>
         </motion.div>

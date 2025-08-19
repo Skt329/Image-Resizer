@@ -177,10 +177,24 @@ export class ImageProcessor {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
+        // Try to detect DPI from image metadata
+        let detectedDPI = 72; // Default DPI for web images
+        
+        // For now, we'll use a reasonable default based on image dimensions
+        // In a production app, you might want to use a library like 'exifr' to read actual metadata
+        if (img.naturalWidth > 2000 || img.naturalHeight > 2000) {
+          detectedDPI = 300; // High resolution images are likely 300 DPI
+        } else if (img.naturalWidth > 1000 || img.naturalHeight > 1000) {
+          detectedDPI = 150; // Medium resolution images
+        } else {
+          detectedDPI = 72; // Standard web resolution
+        }
+        
         resolve({
           width: img.naturalWidth,
           height: img.naturalHeight,
           size: file.size / 1024,
+          dpi: detectedDPI,
         });
       };
       img.onerror = () => reject(new Error("Failed to load image"));
