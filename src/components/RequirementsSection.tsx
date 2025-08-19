@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Settings, Ruler, FileText, Image as ImageIcon, Maximize2 } from "lucide-react";
+import { Settings, Ruler, FileText, Image as ImageIcon, Maximize2, Lock, Unlock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -28,7 +28,7 @@ export function RequirementsSection({
   // Conversion constants (assuming 96 DPI for screen)
   const PIXELS_PER_CM = 37.7952755906; // 96 DPI / 2.54 cm/inch
   
-  const handleChange = (field: keyof ProcessingRequirements, value: string | number) => {
+  const handleChange = (field: keyof ProcessingRequirements, value: string | number | boolean) => {
     onRequirementsChange({
       ...requirements,
       [field]: value,
@@ -55,20 +55,28 @@ export function RequirementsSection({
       pixelValue = value;
     }
     
-    // Maintain aspect ratio if shift key is pressed (for future enhancement)
-    const currentAspectRatio = requirements.width / requirements.height;
-    
-    if (field === "width") {
-      onRequirementsChange({
-        ...requirements,
-        width: pixelValue,
-        height: Math.round(pixelValue / currentAspectRatio)
-      });
+    // Maintain aspect ratio if locked
+    if (requirements.aspectRatioLocked) {
+      const currentAspectRatio = requirements.width / requirements.height;
+      
+      if (field === "width") {
+        onRequirementsChange({
+          ...requirements,
+          width: pixelValue,
+          height: Math.round(pixelValue / currentAspectRatio)
+        });
+      } else {
+        onRequirementsChange({
+          ...requirements,
+          height: pixelValue,
+          width: Math.round(pixelValue * currentAspectRatio)
+        });
+      }
     } else {
+      // Free dimension change when aspect ratio is unlocked
       onRequirementsChange({
         ...requirements,
-        height: pixelValue,
-        width: Math.round(pixelValue * currentAspectRatio)
+        [field]: pixelValue,
       });
     }
   };
@@ -291,6 +299,20 @@ export function RequirementsSection({
               <div className="h-10 flex items-center justify-center bg-gray-50 rounded-md border border-gray-300">
                 <span className="text-lg font-mono text-gray-700">{getAspectRatio()}</span>
               </div>
+              <button
+                onClick={() => handleChange("aspectRatioLocked", !requirements.aspectRatioLocked)}
+                className="flex items-center justify-center space-x-2 text-xs w-full p-2 rounded-md hover:bg-gray-100 transition-colors duration-200 group"
+                title={requirements.aspectRatioLocked ? "Click to unlock aspect ratio" : "Click to lock aspect ratio"}
+              >
+                {requirements.aspectRatioLocked ? (
+                  <Lock className="h-3 w-3 text-green-600 group-hover:text-green-700" />
+                ) : (
+                  <Unlock className="h-3 w-3 text-gray-400 group-hover:text-gray-600" />
+                )}
+                <span className={`${requirements.aspectRatioLocked ? "text-green-600" : "text-gray-500"} group-hover:font-medium`}>
+                  {requirements.aspectRatioLocked ? "Locked" : "Unlocked"}
+                </span>
+              </button>
             </div>
           </div>
           
@@ -309,6 +331,18 @@ export function RequirementsSection({
                 ({pixelsToCm(imageData.width).toFixed(1)} × {pixelsToCm(imageData.height).toFixed(1)} cm)
               </span>
             </span>
+          </div>
+          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center space-x-2 text-blue-800 mb-1">
+              <Maximize2 className="h-4 w-4" />
+              <span className="text-sm font-medium">Aspect Ratio Control</span>
+            </div>
+            <p className="text-xs text-blue-700">
+              {requirements.aspectRatioLocked 
+                ? "🔒 Aspect ratio is locked. Click the lock icon below to unlock and adjust dimensions independently."
+                : "🔓 Aspect ratio is unlocked. Click the unlock icon below to lock and maintain proportions automatically."
+              }
+            </p>
           </div>
           <p className="text-xs text-gray-500">
             Dimensions are pre-filled with your original image size. Toggle between pixels and centimeters.
@@ -372,13 +406,15 @@ export function RequirementsSection({
           </div>
         </motion.div>
 
-        {/* Summary */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200"
-        >
+        
+
+                 {/* Summary */}
+         <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.4 }}
+           className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200"
+         >
           <h4 className="font-semibold text-gray-800 mb-2">Processing Summary</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div>
@@ -398,6 +434,7 @@ export function RequirementsSection({
               <div className="font-medium uppercase">{requirements.format}</div>
             </div>
           </div>
+          
                      <div className="mt-3 p-3 bg-white/60 rounded-lg border border-blue-200">
              <div className="text-xs text-blue-700 font-medium mb-1">📊 Original vs Target Comparison</div>
              <div className="grid grid-cols-2 gap-4 text-xs">

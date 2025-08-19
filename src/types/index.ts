@@ -15,6 +15,7 @@ export interface ProcessingRequirements {
   height: number; // in pixels
   dpi: number;
   format: "jpg" | "png";
+  aspectRatioLocked: boolean; // Controls whether aspect ratio is maintained when changing dimensions
 }
 
 export interface ProcessingResult {

@@ -19,7 +19,8 @@ export default function Home() {
     width: 800,
     height: 600,
     dpi: 300,
-    format: "jpg"
+    format: "jpg",
+    aspectRatioLocked: true
   });
   const [processedImage, setProcessedImage] = useState<ImageData | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -49,7 +50,8 @@ export default function Home() {
         width: imageInfo.width,
         height: imageInfo.height,
         dpi: imageInfo.dpi || 72,
-        format: "jpg"
+        format: "jpg",
+        aspectRatioLocked: true
       });
       
       setError(null);
