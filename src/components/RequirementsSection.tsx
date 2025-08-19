@@ -57,19 +57,19 @@ export function RequirementsSection({
     
     // Maintain aspect ratio if locked
     if (requirements.aspectRatioLocked) {
-      const currentAspectRatio = requirements.width / requirements.height;
+      const originalAspectRatio = imageData.width / imageData.height;
       
       if (field === "width") {
         onRequirementsChange({
           ...requirements,
           width: pixelValue,
-          height: Math.round(pixelValue / currentAspectRatio)
+          height: Math.round(pixelValue / originalAspectRatio)
         });
       } else {
         onRequirementsChange({
           ...requirements,
           height: pixelValue,
-          width: Math.round(pixelValue * currentAspectRatio)
+          width: Math.round(pixelValue * originalAspectRatio)
         });
       }
     } else {
@@ -299,6 +299,11 @@ export function RequirementsSection({
                <div className="h-9 flex items-center justify-center bg-gray-50 rounded-md border border-gray-300">
                  <span className="text-sm font-mono text-gray-700">{getAspectRatio()}</span>
                </div>
+               {requirements.aspectRatioLocked && (
+                 <div className="text-xs text-center text-gray-500">
+                   Original: {(imageData.width / imageData.height).toFixed(2)}
+                 </div>
+               )}
                <button
                  onClick={() => handleChange("aspectRatioLocked", !requirements.aspectRatioLocked)}
                  className="flex items-center justify-center space-x-1 text-xs w-full p-1 rounded-md hover:bg-gray-100 transition-colors duration-200 group"
