@@ -1,93 +1,48 @@
 # Image Editor - Professional Application Form Image Processor
 
-A fully functional, production-ready web application built with React, Next.js, and Tailwind CSS that allows users to upload and edit images (photos and signatures) for application forms.
+A modern, professional web application for processing and optimizing images to meet exact application form requirements. Built with Next.js, TypeScript, and Tailwind CSS.
 
 ## ✨ Features
 
-### 🖼️ **Upload & Preview**
-- Drag-and-drop or click-to-upload for photos/signatures
-- Instant preview with smooth animations
-- Support for JPG, PNG, GIF, WebP formats
-- Maximum file size: 10MB
+### 🖼️ **Image Processing**
+- **Resize & Compress**: Adjust dimensions and file size to meet exact specifications
+- **DPI Control**: Set precise DPI values for print quality requirements
+- **Format Conversion**: Convert between JPEG and PNG formats
+- **Aspect Ratio**: Maintain or unlock aspect ratio for flexible sizing
+- **Unit Support**: Switch between pixels and centimeters
 
-### ⚙️ **Input Requirements**
-- **File Size Range**: Specify exact file size requirements (e.g., 20 KB to 30 KB)
-- **Dimensions**: Set exact width × height in pixels
-- **DPI**: Adjust DPI for print quality (72-600 DPI)
-- **Format**: Choose between JPG and PNG output
+### 🎨 **Modern UI/UX**
+- **Dark Mode**: Beautiful dark theme with smooth transitions (default)
+- **Theme Toggle**: Switch between light and dark modes
+- **Responsive Design**: Works perfectly on all devices
+- **Smooth Animations**: Framer Motion powered interactions
+- **Professional Look**: Clean, modern interface for professional use
 
-### 🛠️ **Processing Tools**
-- **High-Quality Resizing**: Uses Pica.js for superior image resizing
-- **Smart Compression**: Browser-image-compression for optimal file size
-- **DPI Adjustment**: Canvas-based DPI modification
-- **Format Conversion**: Seamless JPG/PNG conversion
+### 🔧 **Technical Features**
+- **Real-time Preview**: See changes instantly
+- **Drag & Drop**: Intuitive file upload interface
+- **File Validation**: Automatic format and size checking
+- **Progress Tracking**: Visual feedback during processing
+- **Download Ready**: Processed images ready for immediate use
 
-### 📥 **Output & Download**
-- Live preview of processed image
-- Display of actual file size, dimensions, and DPI
-- Download in JPG or PNG format
-- Optimized for application forms
-
-### 🚨 **Error Handling**
-- Clear error messages for failed processing
-- Validation of input requirements
-- Suggestions for nearest possible results
-
-## 🚀 Tech Stack
-
-- **Frontend**: React 18 + Next.js 15 + TypeScript
-- **Styling**: Tailwind CSS + shadcn/ui components
-- **Animations**: Framer Motion
-- **Image Processing**: 
-  - `browser-image-compression` for size optimization
-  - `pica` for high-quality resizing
-  - HTML5 Canvas for DPI adjustments
-- **UI Components**: shadcn/ui (Button, Card, Input, Label, etc.)
-- **Icons**: Lucide React
-
-## 🎨 UI/UX Features
-
-- **Modern Design**: Clean, professional interface with glassmorphism effects
-- **Responsive Layout**: Works seamlessly on desktop and mobile devices
-- **Smooth Animations**: Framer Motion-powered transitions and micro-interactions
-- **Color Scheme**: Light mode with soft shadows and rounded corners
-- **Accessibility**: Proper ARIA labels and keyboard navigation
-
-## 📱 Layout Structure
-
-- **Navbar**: App title with gradient branding
-- **Main Content**: Grid layout with responsive cards
-  - Upload Section
-  - Requirements Section
-  - Preview Section
-  - Download Section
-- **Footer**: Simple note about the app's purpose
-
-## 🛠️ Installation & Setup
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+ 
 - npm or yarn
 
-### Setup Steps
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd image-editor
-   ```
+### Installation
+```bash
+# Clone the repository
+git clone <repository-url>
+cd image-editor
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+# Install dependencies
+npm install
 
-3. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+# Run development server
+npm run dev
+```
 
 ### Build for Production
 ```bash
@@ -95,91 +50,55 @@ npm run build
 npm start
 ```
 
-## 🔧 Configuration
+## 🎯 Use Cases
 
-The app uses several configuration files:
-- `tailwind.config.js` - Tailwind CSS configuration
-- `components.json` - shadcn/ui component configuration
-- `tsconfig.json` - TypeScript configuration
+Perfect for professionals who need to:
+- **Resize photos** for passport applications
+- **Optimize signatures** for document uploads
+- **Adjust images** for government forms
+- **Compress files** for online submissions
+- **Convert formats** for specific requirements
 
-## 📁 Project Structure
+## 🛠️ Tech Stack
 
-```
-src/
-├── app/                    # Next.js app directory
-│   ├── globals.css        # Global styles and CSS variables
-│   ├── layout.tsx         # Root layout component
-│   └── page.tsx           # Main page component
-├── components/             # React components
-│   ├── ui/                # shadcn/ui components
-│   ├── Navbar.tsx         # Navigation component
-│   ├── UploadSection.tsx  # Image upload section
-│   ├── RequirementsSection.tsx # Processing requirements
-│   ├── PreviewSection.tsx # Image preview and processing
-│   ├── DownloadSection.tsx # Download section
-│   └── Footer.tsx         # Footer component
-├── lib/                    # Utility libraries
-│   ├── ImageProcessor.ts  # Core image processing logic
-│   └── utils.ts           # Utility functions
-└── types/                  # TypeScript type definitions
-    └── index.ts           # Main type definitions
-```
+- **Frontend**: Next.js 14, React 18, TypeScript
+- **Styling**: Tailwind CSS with custom dark mode support
+- **Animations**: Framer Motion
+- **UI Components**: Custom component library with shadcn/ui
+- **Build Tool**: Next.js App Router
+- **Deployment**: Vercel ready
 
-## 🎯 Core Components
+## 🌙 Dark Mode
 
-### ImageProcessor Class
-The heart of the application that handles:
-- Image resizing with Pica.js
-- DPI adjustment using Canvas API
-- File compression with browser-image-compression
-- Format conversion (JPG/PNG)
+The application features a sophisticated dark mode system:
+- **Default Theme**: Dark mode is enabled by default
+- **Theme Persistence**: Your preference is saved in localStorage
+- **System Integration**: Automatically detects system theme preference
+- **Smooth Transitions**: Beautiful theme switching animations
+- **Accessibility**: Proper contrast ratios in both themes
 
-### UploadSection
-- Drag-and-drop file upload
-- File validation and preview
-- Responsive design with animations
+### Theme Toggle
+- Located in the top-right corner of the navigation bar
+- Click to switch between light and dark modes
+- Icon changes dynamically (sun/moon) based on current theme
 
-### RequirementsSection
-- Interactive form for setting requirements
-- Real-time validation and feedback
-- Slider controls for DPI adjustment
+## 📱 Responsive Design
 
-### PreviewSection
-- Side-by-side comparison of original vs processed
-- Processing status and progress indicators
-- Error handling and user feedback
-
-### DownloadSection
-- Final image preview
-- Download functionality
-- Processing summary and specifications
+- **Mobile First**: Optimized for mobile devices
+- **Tablet Friendly**: Perfect layout for tablets
+- **Desktop Optimized**: Enhanced experience on larger screens
+- **Touch Support**: Full touch gesture support
 
 ## 🔒 Security & Privacy
 
-- **No Data Storage**: Images are processed in the browser only
-- **Client-Side Processing**: All operations happen locally
-- **Secure**: No server-side image handling or storage
-- **Privacy-First**: User images never leave their device
-
-## 🚀 Performance Features
-
-- **Lazy Loading**: Components load as needed
-- **Optimized Processing**: Efficient image algorithms
-- **Responsive Images**: Automatic sizing and optimization
-- **Smooth Animations**: 60fps animations with Framer Motion
-
-## 🌟 Future Enhancements
-
-The modular architecture makes it easy to add new features:
-- **Cropping Tools**: Interactive image cropping
-- **Filters & Effects**: Basic image filters
-- **Batch Processing**: Multiple image processing
-- **Cloud Storage**: Optional cloud backup
-- **Advanced Formats**: Support for more image formats
+- **Client-side Processing**: All image processing happens in the browser
+- **No Data Storage**: Images are never uploaded to servers
+- **Privacy First**: Your images stay on your device
+- **Secure**: No external API calls or data transmission
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is licensed under the MIT License.
 
 ## 🤝 Contributing
 
@@ -188,7 +107,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📞 Support
 
 For support or questions, please open an issue in the repository.
-
----
-
-**Built with ❤️ using modern web technologies for professional image processing needs.**

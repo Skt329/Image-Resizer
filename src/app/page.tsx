@@ -105,14 +105,15 @@ export default function Home() {
           animate="visible"
           className="space-y-8"
         >
-          <motion.div variants={itemVariants} className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-foreground mb-4">
               Professional Image Editor
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Upload your photos and signatures, then customize them to meet exact application form requirements.
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Transform your photos and signatures to meet exact application form requirements. 
+              Resize, compress, and adjust images with precision.
             </p>
-          </motion.div>
+          </div>
 
           <motion.div variants={itemVariants}>
             <UploadSection onImageUpload={handleImageUpload} />

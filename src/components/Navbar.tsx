@@ -2,13 +2,14 @@
 
 import { motion } from "framer-motion";
 import { Camera, Palette } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
   return (
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card sticky top-0 z-50 border-b border-white/20"
+      className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md"
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
@@ -25,15 +26,19 @@ export function Navbar() {
             </h1>
           </motion.div>
           
-          <motion.div
-            className="flex items-center space-x-2 text-sm text-gray-600"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Palette className="h-4 w-4" />
-            <span>Professional Image Processing</span>
-          </motion.div>
+          <div className="flex items-center space-x-4">
+            <motion.div
+              className="flex items-center space-x-2 text-sm text-muted-foreground"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Palette className="h-4 w-4" />
+              <span>Professional Image Processing</span>
+            </motion.div>
+            
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </motion.nav>

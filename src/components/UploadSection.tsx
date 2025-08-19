@@ -69,10 +69,10 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
   return (
     <Card className="glass-card overflow-hidden">
       <CardHeader className="text-center pb-4">
-        <CardTitle className="text-2xl font-bold text-gray-800">
+        <CardTitle className="text-2xl font-bold text-foreground">
           Upload Your Image
         </CardTitle>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Drag and drop your photo or signature, or click to browse
         </p>
       </CardHeader>
@@ -96,19 +96,19 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
           >
             <div className="flex justify-center">
               <motion.div
-                className="p-4 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full"
+                className="p-4 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
-                <ImageIcon className="h-12 w-12 text-blue-600" />
+                <ImageIcon className="h-12 w-12 text-blue-600 dark:text-blue-400" />
               </motion.div>
             </div>
             
             <div className="space-y-2">
-              <h3 className="text-xl font-semibold text-gray-800">
+              <h3 className="text-xl font-semibold text-foreground">
                 {isDragOver ? "Drop your image here" : "Choose an image file"}
               </h3>
-              <p className="text-gray-500">
+              <p className="text-muted-foreground">
                 Supports JPG, PNG, GIF, WebP • Max 10MB
               </p>
             </div>
@@ -125,7 +125,7 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
               
               <Button
                 variant="outline"
-                className="border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2 rounded-lg font-medium"
+                className="border-border text-foreground hover:bg-accent px-6 py-2 rounded-lg font-medium"
               >
                 <FileImage className="h-4 w-4 mr-2" />
                 Supported Formats
@@ -150,7 +150,7 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
           transition={{ delay: 0.4 }}
           className="mt-6 text-center"
         >
-          <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
+          <div className="flex items-center justify-center space-x-6 text-sm text-muted-foreground">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-400 rounded-full"></div>
               <span>Secure processing</span>

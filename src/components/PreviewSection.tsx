@@ -35,11 +35,11 @@ export function PreviewSection({
   return (
     <Card className="glass-card">
       <CardHeader>
-        <CardTitle className="flex items-center space-x-2 text-2xl font-bold text-gray-800">
-          <Eye className="h-6 w-6 text-blue-600" />
+        <CardTitle className="flex items-center space-x-2 text-2xl font-bold text-foreground">
+          <Eye className="h-6 w-6 text-blue-600 dark:text-blue-400" />
           <span>Image Preview & Processing</span>
         </CardTitle>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Review your original image and process it according to your requirements
         </p>
       </CardHeader>
@@ -49,11 +49,11 @@ export function PreviewSection({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200"
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-lg border border-blue-200 dark:border-blue-800"
         >
           <div className="text-center sm:text-left">
-            <h4 className="font-semibold text-gray-800 mb-1">Ready to Process?</h4>
-            <p className="text-sm text-gray-600">
+            <h4 className="font-semibold text-foreground mb-1">Ready to Process?</h4>
+            <p className="text-sm text-muted-foreground">
               Click the button below to resize, compress, and adjust your image
             </p>
           </div>
@@ -83,14 +83,14 @@ export function PreviewSection({
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="p-4 bg-blue-50 rounded-lg border border-blue-200"
+            className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800"
           >
             <div className="flex items-center space-x-3 mb-3">
-              <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />
-              <span className="font-medium text-blue-800">Processing your image...</span>
+              <Loader2 className="h-5 w-5 text-blue-600 dark:text-blue-400 animate-spin" />
+              <span className="font-medium text-blue-800 dark:text-blue-200">Processing your image...</span>
             </div>
             <Progress value={75} className="h-2" />
-            <p className="text-sm text-blue-600 mt-2">
+            <p className="text-sm text-blue-600 dark:text-blue-400 mt-2">
               Resizing, adjusting DPI, and compressing to meet your requirements
             </p>
           </motion.div>
@@ -101,13 +101,13 @@ export function PreviewSection({
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="p-4 bg-red-50 rounded-lg border border-red-200"
+            className="p-4 bg-red-50 dark:bg-red-950/30 rounded-lg border border-red-200 dark:border-red-800"
           >
             <div className="flex items-center space-x-3">
-              <AlertCircle className="h-5 w-5 text-red-600" />
+              <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
               <div>
-                <h4 className="font-medium text-red-800">Processing Error</h4>
-                <p className="text-sm text-red-600">{error}</p>
+                <h4 className="font-medium text-red-800 dark:text-red-200">Processing Error</h4>
+                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
               </div>
             </div>
           </motion.div>
@@ -123,8 +123,8 @@ export function PreviewSection({
             className="space-y-4"
           >
             <div className="text-center">
-              <h4 className="font-semibold text-gray-800 mb-2">Original Image</h4>
-              <Badge variant="outline" className="bg-gray-100 text-gray-700">
+              <h4 className="font-semibold text-foreground mb-2">Original Image</h4>
+              <Badge variant="outline" className="bg-muted text-muted-foreground">
                 {originalImage.name}
               </Badge>
             </div>
@@ -133,7 +133,7 @@ export function PreviewSection({
               <img
                 src={originalImage.url}
                 alt="Original"
-                className="w-full h-64 object-contain rounded-lg border border-gray-200 shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                className="w-full h-64 object-contain rounded-lg border border-border shadow-sm group-hover:shadow-md transition-shadow duration-200"
               />
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 rounded-lg flex items-center justify-center">
                 <Eye className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
@@ -151,14 +151,14 @@ export function PreviewSection({
             className="space-y-4"
           >
             <div className="text-center">
-              <h4 className="font-semibold text-gray-800 mb-2">Processed Image</h4>
+              <h4 className="font-semibold text-foreground mb-2">Processed Image</h4>
               {processedImage ? (
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <Badge variant="secondary" className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
                   <CheckCircle className="h-3 w-3 mr-1" />
                   Ready
                 </Badge>
               ) : (
-                <Badge variant="outline" className="bg-gray-100 text-gray-500">
+                <Badge variant="outline" className="bg-muted text-muted-foreground">
                   Not processed yet
                 </Badge>
               )}
@@ -169,11 +169,11 @@ export function PreviewSection({
                 <img
                   src={processedImage.url}
                   alt="Processed"
-                  className="w-full h-64 object-contain rounded-lg border border-green-200 shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                  className="w-full h-64 object-contain rounded-lg border border-green-200 dark:border-green-800 shadow-sm group-hover:shadow-md transition-shadow duration-200"
                 />
               ) : (
-                <div className="w-full h-64 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-                  <div className="text-center text-gray-500">
+                <div className="w-full h-64 bg-muted rounded-lg border-2 border-dashed border-border flex items-center justify-center">
+                  <div className="text-center text-muted-foreground">
                     <Eye className="h-12 w-12 mx-auto mb-2 opacity-50" />
                     <p>Process image to see result</p>
                   </div>

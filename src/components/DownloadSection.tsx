@@ -27,74 +27,46 @@ export function DownloadSection({ processedImage }: DownloadSectionProps) {
   const getFormat = () => processedImage.file.type.split('/')[1].toUpperCase();
 
   return (
-    <Card className="glass-card border-green-200 bg-gradient-to-br from-green-50 to-blue-50">
-      <CardHeader className="text-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          className="mx-auto mb-4 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center"
-        >
-          <CheckCircle className="h-8 w-8 text-green-600" />
-        </motion.div>
-        
-        <CardTitle className="text-2xl font-bold text-gray-800">
-          Image Successfully Processed!
+    <Card className="glass-card border-green-200 dark:border-green-800 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/30 dark:to-blue-950/30">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-foreground">
+          Download Your Processed Image
         </CardTitle>
-        <p className="text-gray-600">
-          Your image has been optimized according to your requirements and is ready for download
+        <p className="text-muted-foreground">
+          Your image has been processed according to your specifications. Review the details and download.
         </p>
       </CardHeader>
       
       <CardContent className="space-y-6">
-        
-
-        {/* Image Specifications */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          <div className="text-center p-4 bg-white/60 backdrop-blur-sm rounded-lg border border-green-200">
-            <FileText className="h-6 w-6 text-green-600 mx-auto mb-2" />
-            <div className="font-semibold text-gray-800">{getFileSize()}</div>
-            <div className="text-sm text-gray-600">File Size</div>
+        {/* Image Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center p-3 bg-muted rounded-lg">
+            <div className="font-semibold text-foreground">{getFileSize()}</div>
+            <div className="text-sm text-muted-foreground">File Size</div>
           </div>
           
-          <div className="text-center p-4 bg-white/60 backdrop-blur-sm rounded-lg border border-blue-200">
-            <Ruler className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-            <div className="font-semibold text-gray-800">{getDimensions()}</div>
-            <div className="text-sm text-gray-600">Dimensions</div>
+          <div className="text-center p-3 bg-muted rounded-lg">
+            <div className="font-semibold text-foreground">{getDimensions()}</div>
+            <div className="text-sm text-muted-foreground">Dimensions</div>
           </div>
           
-          <div className="text-center p-4 bg-white/60 backdrop-blur-sm rounded-lg border border-purple-200">
-            <ImageIcon className="h-6 w-6 text-purple-600 mx-auto mb-2" />
-            <div className="font-semibold text-gray-800">{getDPI()}</div>
-            <div className="text-sm text-gray-600">DPI</div>
+          <div className="text-center p-3 bg-muted rounded-lg">
+            <div className="font-semibold text-foreground">{getDPI()}</div>
+            <div className="text-sm text-muted-foreground">DPI</div>
           </div>
           
-          <div className="text-center p-4 bg-white/60 backdrop-blur-sm rounded-lg border border-orange-200">
-            <div className="h-6 w-6 bg-gradient-to-br from-orange-400 to-red-500 rounded mx-auto mb-2 flex items-center justify-center">
-              <span className="text-white text-xs font-bold">{getFormat()}</span>
-            </div>
-            <div className="font-semibold text-gray-800">{getFormat()}</div>
-            <div className="text-sm text-gray-600">Format</div>
+          <div className="text-center p-3 bg-muted rounded-lg">
+            <div className="font-semibold text-foreground">{getFormat()}</div>
+            <div className="text-sm text-muted-foreground">Format</div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Download Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-center space-y-4"
-        >
-          <div className="p-4 bg-gradient-to-r from-green-100 to-blue-100 rounded-lg border border-green-200">
-            <h4 className="font-semibold text-gray-800 mb-2">Ready to Download</h4>
-            <p className="text-sm text-gray-600 mb-4">
-              Your image meets all the specified requirements and is optimized for application forms
-            </p>
+        <div className="text-center p-6 bg-muted rounded-lg">
+          <h4 className="font-semibold text-foreground mb-2">Ready to Download</h4>
+          <p className="text-sm text-muted-foreground mb-4">
+            Your image meets all the specified requirements and is ready for use.
+          </p>
             
             <Button
               onClick={handleDownload}
@@ -105,12 +77,7 @@ export function DownloadSection({ processedImage }: DownloadSectionProps) {
               Download Processed Image
             </Button>
           </div>
-        </motion.div>
-
-
-
-
-      </CardContent>
+        </CardContent>
     </Card>
   );
 }
