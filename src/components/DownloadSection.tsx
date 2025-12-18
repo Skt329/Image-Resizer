@@ -1,10 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Download, CheckCircle, FileText, Ruler, Image as ImageIcon } from "lucide-react";
+import { Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ImageData } from "@/types";
 
 interface DownloadSectionProps {
