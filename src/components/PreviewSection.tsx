@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ImageData } from "@/types";
+import Image from "next/image";
 
 interface PreviewSectionProps {
   originalImage: ImageData;
@@ -23,14 +24,15 @@ export function PreviewSection({
   error,
   onProcess,
 }: PreviewSectionProps) {
-  const getImageInfo = (image: ImageData) => ({
-    size: `${image.size.toFixed(1)} KB`,
-    dimensions: `${image.width} × ${image.height} px`,
-    dpi: image.dpi || "Unknown",
-  });
+  // Helper removed as unused
+  // const getImageInfo = (image: ImageData) => ({
+  //   size: `${image.size.toFixed(1)} KB`,
+  //   dimensions: `${image.width} × ${image.height} px`,
+  //   dpi: image.dpi || "Unknown",
+  // });
 
-  const originalInfo = getImageInfo(originalImage);
-  const processedInfo = processedImage ? getImageInfo(processedImage) : null;
+  // const originalInfo = getImageInfo(originalImage);
+  // const processedInfo = processedImage ? getImageInfo(processedImage) : null;
 
   return (
     <Card className="glass-card">
@@ -129,13 +131,15 @@ export function PreviewSection({
               </Badge>
             </div>
             
-            <div className="relative group">
-              <img
+            <div className="relative group w-full h-64">
+              <Image
                 src={originalImage.url}
                 alt="Original"
-                className="w-full h-64 object-contain rounded-lg border border-border shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                fill
+                className="object-contain rounded-lg border border-border shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                unoptimized // Required for Blob URLs
               />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 rounded-lg flex items-center justify-center">
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 rounded-lg flex items-center justify-center z-10">
                 <Eye className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
               </div>
             </div>
@@ -164,15 +168,17 @@ export function PreviewSection({
               )}
             </div>
             
-            <div className="relative group">
+            <div className="relative group w-full h-64">
               {processedImage ? (
-                <img
+                <Image
                   src={processedImage.url}
                   alt="Processed"
-                  className="w-full h-64 object-contain rounded-lg border border-green-200 dark:border-green-800 shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                  fill
+                  className="object-contain rounded-lg border border-green-200 dark:border-green-800 shadow-sm group-hover:shadow-md transition-shadow duration-200"
+                  unoptimized // Required for Blob URLs
                 />
               ) : (
-                <div className="w-full h-64 bg-muted rounded-lg border-2 border-dashed border-border flex items-center justify-center">
+                <div className="w-full h-full bg-muted rounded-lg border-2 border-dashed border-border flex items-center justify-center">
                   <div className="text-center text-muted-foreground">
                     <Eye className="h-12 w-12 mx-auto mb-2 opacity-50" />
                     <p>Process image to see result</p>
