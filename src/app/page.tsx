@@ -11,6 +11,7 @@ import { Footer } from "@/components/Footer";
 import { ImageProcessor } from "@/lib/ImageProcessor";
 import { ImageData, ProcessingRequirements } from "@/types";
 import { ImageEditor } from "@/components/ImageEditor";
+import { convertHeicToBlob } from "@/lib/heic";
 
 export default function Home() {
   const [imageData, setImageData] = useState<ImageData | null>(null);
@@ -28,18 +29,27 @@ export default function Home() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleImageUpload = async (file: File) => {
+  const handleImageUpload = async (file: File, skipEditor = false) => {
     try {
+      // Check for HEIC and convert if necessary
+      let processedFile = file;
+      const convertedBlob = await convertHeicToBlob(file);
+      if (convertedBlob) {
+        processedFile = new File([convertedBlob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), {
+          type: "image/jpeg",
+        });
+      }
+
       const processor = new ImageProcessor();
-      const imageInfo = await processor.getImageInfo(file);
+      const imageInfo = await processor.getImageInfo(processedFile);
       
       const newImageData: ImageData = {
-        file,
-        url: URL.createObjectURL(file),
+        file: processedFile,
+        url: URL.createObjectURL(processedFile),
         width: imageInfo.width,
         height: imageInfo.height,
         size: imageInfo.size,
-        name: file.name,
+        name: processedFile.name,
         dpi: imageInfo.dpi
       };
       
@@ -58,7 +68,9 @@ export default function Home() {
       
       setError(null);
       setProcessedImage(null);
-      setIsEditorOpen(true); // Open editor immediately after upload
+      if (!skipEditor) {
+        setIsEditorOpen(true); // Open editor immediately after upload
+      }
     } catch (error) {
       console.error("Error processing image:", error);
       setError("Failed to process image. Please try again.");
@@ -67,10 +79,8 @@ export default function Home() {
 
   const handleEditorSave = async (editedFile: File) => {
     setIsEditorOpen(false);
-    // Re-process the edited image to update dimensions/preview
-    await handleImageUpload(editedFile);
-    // Don't re-open editor after save
-    setIsEditorOpen(false);
+    // Re-process the edited image to update dimensions/preview, but skip reopening the editor
+    await handleImageUpload(editedFile, true);
   };
 
   const processImage = async () => {

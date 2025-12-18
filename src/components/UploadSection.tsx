@@ -29,7 +29,11 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
       }
 
       // Validate file type
-      if (!file.type.startsWith('image/')) {
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif'];
+      const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+
+      if (!file.type.startsWith('image/') && !isHeic) {
+         // Some browsers don't recognize heic mime type correctly
         throw new Error("Please select a valid image file");
       }
 
@@ -52,7 +56,10 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
     setIsDragOver(false);
     
     const files = Array.from(e.dataTransfer.files);
-    const imageFile = files.find(file => file.type.startsWith('image/'));
+    const imageFile = files.find(file => {
+      const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+      return file.type.startsWith('image/') || isHeic;
+    });
     
     if (imageFile) {
       handleFileUpload(imageFile);
@@ -61,8 +68,11 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      handleFileUpload(file);
+    if (file) {
+      const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+      if (file.type.startsWith('image/') || isHeic) {
+        handleFileUpload(file);
+      }
     }
   }, [handleFileUpload]);
 
@@ -109,7 +119,7 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
                 {isDragOver ? "Drop your image here" : "Choose an image file"}
               </h3>
               <p className="text-muted-foreground">
-                Supports JPG, PNG, GIF, WebP • Max 10MB
+                Supports JPG, PNG, GIF, WebP, HEIC • Max 10MB
               </p>
             </div>
 
@@ -135,7 +145,7 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
             <input
               id="file-input"
               type="file"
-              accept="image/*"
+              accept="image/*,.heic,.heif"
               onChange={handleFileSelect}
               className="hidden"
               aria-label="Select image file"

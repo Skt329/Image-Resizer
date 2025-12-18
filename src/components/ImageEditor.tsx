@@ -3,13 +3,20 @@ import Cropper, { Area } from "react-easy-crop";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { RotateCw, ZoomIn, Check, X } from "lucide-react";
+import { RotateCw, ZoomIn, Check, X, Ratio } from "lucide-react";
 import { ImageData } from "@/types";
 
 interface ImageEditorProps {
@@ -28,6 +35,7 @@ export function ImageEditor({
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
+  const [aspect, setAspect] = useState<number | undefined>(undefined);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   const onCropComplete = useCallback(
@@ -36,6 +44,14 @@ export function ImageEditor({
     },
     []
   );
+
+  const handleAspectChange = (value: string) => {
+    if (value === "free") {
+      setAspect(undefined);
+    } else {
+      setAspect(parseFloat(value));
+    }
+  };
 
   const createCroppedImage = async () => {
     if (!imageData || !croppedAreaPixels) return;
@@ -65,49 +81,73 @@ export function ImageEditor({
           <DialogTitle>Edit Image</DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 relative bg-black/5 min-h-[400px]">
+        <div className="flex-1 relative bg-black/5 min-h-[400px] overflow-hidden">
           <Cropper
             image={imageData.url}
             crop={crop}
             zoom={zoom}
             rotation={rotation}
-            aspect={undefined} // Free crop by default, could be added as prop
+            aspect={aspect}
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onRotationChange={setRotation}
             onCropComplete={onCropComplete}
+            initialCroppedAreaPercentages={{ x: 0, y: 0, width: 100, height: 100 }}
           />
         </div>
 
         <div className="p-6 bg-background border-t space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 min-w-[100px]">
-              <ZoomIn className="w-4 h-4" />
-              <span className="text-sm font-medium">Zoom</span>
-            </div>
-            <Slider
-              value={[zoom]}
-              min={1}
-              max={3}
-              step={0.1}
-              onValueChange={(v) => setZoom(v[0])}
-              className="flex-1"
-            />
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 min-w-[80px]">
+                    <ZoomIn className="w-4 h-4" />
+                    <span className="text-sm font-medium">Zoom</span>
+                  </div>
+                  <Slider
+                    value={[zoom]}
+                    min={1}
+                    max={3}
+                    step={0.1}
+                    onValueChange={(v) => setZoom(v[0])}
+                    className="flex-1"
+                  />
+                </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 min-w-[100px]">
-              <RotateCw className="w-4 h-4" />
-              <span className="text-sm font-medium">Rotate</span>
-            </div>
-            <Slider
-              value={[rotation]}
-              min={0}
-              max={360}
-              step={1}
-              onValueChange={(v) => setRotation(v[0])}
-              className="flex-1"
-            />
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 min-w-[80px]">
+                    <RotateCw className="w-4 h-4" />
+                    <span className="text-sm font-medium">Rotate</span>
+                  </div>
+                  <Slider
+                    value={[rotation]}
+                    min={0}
+                    max={360}
+                    step={1}
+                    onValueChange={(v) => setRotation(v[0])}
+                    className="flex-1"
+                  />
+                </div>
+             </div>
+
+             <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 min-w-[80px]">
+                  <Ratio className="w-4 h-4" />
+                  <span className="text-sm font-medium">Ratio</span>
+                </div>
+                <Select onValueChange={handleAspectChange} defaultValue="free">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select ratio" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="free">Free</SelectItem>
+                    <SelectItem value="1">Square (1:1)</SelectItem>
+                    <SelectItem value={String(4/3)}>Standard (4:3)</SelectItem>
+                    <SelectItem value={String(16/9)}>Widescreen (16:9)</SelectItem>
+                    <SelectItem value={String(35/45)}>Passport (35x45mm)</SelectItem>
+                  </SelectContent>
+                </Select>
+             </div>
           </div>
 
           <DialogFooter className="gap-2">
