@@ -36,11 +36,21 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
     const img = await createImageBitmap(file);
     const canvas = new OffscreenCanvas(requirements.width, requirements.height);
 
-    // Pica works with OffscreenCanvas
-    await pica.resize(img, canvas as unknown as HTMLCanvasElement, {
-      quality: 3,
-      // alpha: true, // Removed as it is not in PicaResizeOptions
-    });
+    try {
+      // Try Pica first for high quality
+      await pica.resize(img, canvas as unknown as HTMLCanvasElement, {
+        quality: 3,
+      });
+    } catch (picaError) {
+      console.warn("Pica resize failed, falling back to standard canvas resize:", picaError);
+      // Fallback to standard 2D context resize
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        throw new Error("Could not get canvas context for fallback resize");
+      }
+      // Standard drawImage resizing (bilinear/bicubic depends on browser)
+      ctx.drawImage(img, 0, 0, requirements.width, requirements.height);
+    }
 
     // 2. Compress & Convert Format
     // browser-image-compression works with File/Blob, so we convert canvas to blob first
