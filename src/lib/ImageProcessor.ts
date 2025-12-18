@@ -1,173 +1,74 @@
-import imageCompression from "browser-image-compression";
-import Pica from "pica";
 import { ImageData, ProcessingRequirements } from "@/types";
 
 export class ImageProcessor {
-  private pica: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  private worker: Worker | null = null;
+  private pendingRequests: Map<
+    string,
+    { resolve: (value: Blob) => void; reject: (reason?: Error) => void }
+  > = new Map();
 
   constructor() {
-    this.pica = new Pica();
+    if (typeof window !== "undefined") {
+      this.worker = new Worker(new URL("../worker/image.worker.ts", import.meta.url));
+      this.worker.onmessage = this.handleWorkerMessage.bind(this);
+    }
+  }
+
+  private handleWorkerMessage(event: MessageEvent) {
+    const { id, success, data, error } = event.data;
+    const request = this.pendingRequests.get(id);
+
+    if (request) {
+      if (success) {
+        request.resolve(data);
+      } else {
+        request.reject(new Error(error));
+      }
+      this.pendingRequests.delete(id);
+    }
   }
 
   async processImage(
     imageData: ImageData,
     requirements: ProcessingRequirements
   ): Promise<ImageData> {
-    try {
-      // Step 1: Resize image to target dimensions
-      const resizedCanvas = await this.resizeImage(
-        imageData.url,
-        requirements.width,
-        requirements.height
-      );
-
-      // Step 2: Adjust DPI if specified
-      const dpiAdjustedCanvas = await this.adjustDPI(
-        resizedCanvas,
-        requirements.dpi
-      );
-
-      // Step 3: Compress to meet file size requirements
-      const compressedBlob = await this.compressImage(
-        dpiAdjustedCanvas,
-        requirements.minSize,
-        requirements.maxSize,
-        requirements.format
-      );
-
-      // Step 4: Create final image data
-      const finalImageData: ImageData = {
-        file: new File([compressedBlob], `processed_${imageData.name}`, {
-          type: `image/${requirements.format}`,
-        }),
-        url: URL.createObjectURL(compressedBlob),
-        width: requirements.width,
-        height: requirements.height,
-        size: compressedBlob.size / 1024,
-        name: `processed_${imageData.name}`,
-        dpi: requirements.dpi,
-      };
-
-      return finalImageData;
-    } catch (error) {
-      throw new Error(`Image processing failed: ${error}`);
+    if (!this.worker) {
+      throw new Error("Worker not initialized");
     }
-  }
 
-  private async resizeImage(
-    imageUrl: string,
-    targetWidth: number,
-    targetHeight: number
-  ): Promise<HTMLCanvasElement> {
+    const id = crypto.randomUUID();
+
     return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      
-      img.onload = async () => {
-        try {
-          const canvas = document.createElement("canvas");
-          canvas.width = targetWidth;
-          canvas.height = targetHeight;
-
-          // Use Pica for high-quality resizing
-          const resizedCanvas = await this.pica.resize(img, canvas, {
-            quality: 3,
-            alpha: true,
-          });
-
-          resolve(resizedCanvas);
-        } catch (error) {
-          reject(error);
-        }
-      };
-
-      img.onerror = () => reject(new Error("Failed to load image"));
-      img.src = imageUrl;
-    });
-  }
-
-  private async adjustDPI(
-    canvas: HTMLCanvasElement,
-    targetDPI: number
-  ): Promise<HTMLCanvasElement> {
-    const currentDPI = 96; // Standard screen DPI
-    const scale = targetDPI / currentDPI;
-
-    if (Math.abs(scale - 1) < 0.01) {
-      return canvas; // No adjustment needed
-    }
-
-    const newCanvas = document.createElement("canvas");
-    newCanvas.width = canvas.width * scale;
-    newCanvas.height = canvas.height * scale;
-
-    const ctx = newCanvas.getContext("2d");
-    if (!ctx) throw new Error("Failed to get canvas context");
-
-    // Set high quality rendering
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-
-    // Draw the resized image
-    ctx.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height);
-
-    return newCanvas;
-  }
-
-  private async compressImage(
-    canvas: HTMLCanvasElement,
-    minSize: number,
-    maxSize: number,
-    format: "jpg" | "png"
-  ): Promise<Blob> {
-    const maxSizeBytes = maxSize * 1024;
-
-    // Convert canvas to blob
-    const blob = await new Promise<Blob>((resolve) => {
-      canvas.toBlob(
-        (blob) => {
-          if (blob) resolve(blob);
-          else throw new Error("Failed to create blob");
+      this.pendingRequests.set(id, {
+        resolve: (processedBlob: Blob) => {
+           const finalImageData: ImageData = {
+            file: new File([processedBlob], `processed_${imageData.name}`, {
+              type: `image/${requirements.format}`,
+            }),
+            url: URL.createObjectURL(processedBlob),
+            width: requirements.width,
+            height: requirements.height,
+            size: processedBlob.size / 1024,
+            name: `processed_${imageData.name}`,
+            dpi: requirements.dpi,
+          };
+          resolve(finalImageData);
         },
-        `image/${format}`,
-        0.9 // Start with high quality
-      );
+        reject,
+      });
+
+      this.worker!.postMessage({
+        id,
+        type: "process",
+        data: {
+          file: imageData.file,
+          requirements,
+        },
+      });
     });
-
-    // If already within size range, return as is
-    if (blob.size <= maxSizeBytes) {
-      return blob;
-    }
-
-    // Use browser-image-compression for size reduction
-    const compressionOptions = {
-      maxSizeMB: maxSize / 1024,
-      maxWidthOrHeight: Math.max(canvas.width, canvas.height),
-      useWebWorker: true,
-      fileType: format === "jpg" ? "image/jpeg" : "image/png",
-    };
-
-    try {
-      // Convert blob to file for imageCompression
-      const file = new File([blob], 'image', { type: blob.type });
-      const compressedBlob = await imageCompression(file, compressionOptions);
-      
-      // Verify the compressed size is within range
-      if (compressedBlob.size > maxSizeBytes) {
-        throw new Error(
-          `Unable to compress image to required size. Best achieved: ${(
-            compressedBlob.size / 1024
-          ).toFixed(1)} KB`
-        );
-      }
-
-      return compressedBlob;
-    } catch (error) {
-      throw new Error(`Compression failed: ${error}`);
-    }
   }
 
-  // Utility method to get image info
+  // Utility method to get image info (kept on main thread as it is fast and needs Image object)
   async getImageInfo(file: File): Promise<{
     width: number;
     height: number;
@@ -180,14 +81,12 @@ export class ImageProcessor {
         // Try to detect DPI from image metadata
         let detectedDPI = 72; // Default DPI for web images
         
-        // For now, we'll use a reasonable default based on image dimensions
-        // In a production app, you might want to use a library like 'exifr' to read actual metadata
         if (img.naturalWidth > 2000 || img.naturalHeight > 2000) {
-          detectedDPI = 300; // High resolution images are likely 300 DPI
+          detectedDPI = 300;
         } else if (img.naturalWidth > 1000 || img.naturalHeight > 1000) {
-          detectedDPI = 150; // Medium resolution images
+          detectedDPI = 150;
         } else {
-          detectedDPI = 72; // Standard web resolution
+          detectedDPI = 72;
         }
         
         resolve({
