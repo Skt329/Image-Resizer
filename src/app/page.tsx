@@ -10,9 +10,11 @@ import { DownloadSection } from "@/components/DownloadSection";
 import { Footer } from "@/components/Footer";
 import { ImageProcessor } from "@/lib/ImageProcessor";
 import { ImageData, ProcessingRequirements } from "@/types";
+import { ImageEditor } from "@/components/ImageEditor";
 
 export default function Home() {
   const [imageData, setImageData] = useState<ImageData | null>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [requirements, setRequirements] = useState<ProcessingRequirements>({
     minSize: 20,
     maxSize: 30,
@@ -56,10 +58,19 @@ export default function Home() {
       
       setError(null);
       setProcessedImage(null);
+      setIsEditorOpen(true); // Open editor immediately after upload
     } catch (error) {
       console.error("Error processing image:", error);
       setError("Failed to process image. Please try again.");
     }
+  };
+
+  const handleEditorSave = async (editedFile: File) => {
+    setIsEditorOpen(false);
+    // Re-process the edited image to update dimensions/preview
+    await handleImageUpload(editedFile);
+    // Don't re-open editor after save
+    setIsEditorOpen(false);
   };
 
   const processImage = async () => {
@@ -120,31 +131,48 @@ export default function Home() {
           </motion.div>
 
           {imageData && (
-            <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Left Column - Controls */}
-              <div className="space-y-6">
-                <RequirementsSection
-                  requirements={requirements}
-                  onRequirementsChange={setRequirements}
-                  imageData={imageData}
-                />
+            <>
+              <ImageEditor
+                imageData={imageData}
+                isOpen={isEditorOpen}
+                onClose={() => setIsEditorOpen(false)}
+                onSave={handleEditorSave}
+              />
+
+              <div className="flex justify-center -mt-4 mb-4">
+                 <button
+                   onClick={() => setIsEditorOpen(true)}
+                   className="text-sm text-primary hover:underline"
+                 >
+                   Open Crop & Rotate Tool
+                 </button>
               </div>
 
-              {/* Right Column - Preview & Processing */}
-              <div className="space-y-6">
-                <PreviewSection
-                  originalImage={imageData}
-                  processedImage={processedImage}
-                  isProcessing={isProcessing}
-                  error={error}
-                  onProcess={processImage}
-                />
+              <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <RequirementsSection
+                    requirements={requirements}
+                    onRequirementsChange={setRequirements}
+                    imageData={imageData}
+                  />
+                </div>
 
-                {processedImage && (
-                  <DownloadSection processedImage={processedImage} />
-                )}
-              </div>
-            </motion.div>
+                {/* Right Column - Preview & Processing */}
+                <div className="space-y-6">
+                  <PreviewSection
+                    originalImage={imageData}
+                    processedImage={processedImage}
+                    isProcessing={isProcessing}
+                    error={error}
+                    onProcess={processImage}
+                  />
+
+                  {processedImage && (
+                    <DownloadSection processedImage={processedImage} />
+                  )}
+                </div>
+              </motion.div>
+            </>
           )}
         </motion.div>
       </main>
