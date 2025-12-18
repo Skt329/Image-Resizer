@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Upload, Image as ImageIcon, FileImage } from "lucide-react";
+import { Upload, Image as ImageIcon, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -13,6 +13,7 @@ interface UploadSectionProps {
 export function UploadSection({ onImageUpload }: UploadSectionProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -21,6 +22,7 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
 
   const handleFileUpload = useCallback(async (file: File) => {
     setIsUploading(true);
+    setError(null);
     
     try {
       // Validate file size (max 10MB)
@@ -36,7 +38,7 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
       onImageUpload(file);
     } catch (error) {
       console.error("Upload error:", error);
-      alert(error instanceof Error ? error.message : "Upload failed");
+      setError(error instanceof Error ? error.message : "Upload failed");
     } finally {
       setIsUploading(false);
     }
@@ -56,15 +58,30 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
     
     if (imageFile) {
       handleFileUpload(imageFile);
+    } else {
+      setError("Please drop a valid image file");
     }
   }, [handleFileUpload]);
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      handleFileUpload(file);
+    if (file) {
+      if (file.type.startsWith('image/')) {
+        handleFileUpload(file);
+      } else {
+        setError("Please select a valid image file");
+      }
     }
+    // Reset input value to allow selecting the same file again
+    e.target.value = "";
   }, [handleFileUpload]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      document.getElementById('file-input')?.click();
+    }
+  }, []);
 
   return (
     <Card className="glass-card overflow-hidden">
@@ -79,14 +96,19 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
       
       <CardContent className="p-6">
         <motion.div
-          className={`upload-zone rounded-xl p-8 text-center transition-all duration-200 ${
-            isDragOver ? "dragover" : ""
-          }`}
+          className={`upload-zone rounded-xl p-8 text-center transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+            isDragOver ? "dragover bg-accent/50" : "hover:bg-accent/20"
+          } ${error ? "border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-800" : ""}`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
+          onClick={() => document.getElementById('file-input')?.click()}
+          onKeyDown={handleKeyDown}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          role="button"
+          tabIndex={0}
+          aria-label="Upload image dropzone. Click or drag and drop an image here."
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -96,39 +118,42 @@ export function UploadSection({ onImageUpload }: UploadSectionProps) {
           >
             <div className="flex justify-center">
               <motion.div
-                className="p-4 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full"
+                className={`p-4 rounded-full ${
+                  error
+                    ? "bg-red-100 dark:bg-red-900/30"
+                    : "bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30"
+                }`}
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
-                <ImageIcon className="h-12 w-12 text-blue-600 dark:text-blue-400" />
+                {error ? (
+                  <AlertCircle className="h-12 w-12 text-red-600 dark:text-red-400" />
+                ) : (
+                  <ImageIcon className="h-12 w-12 text-blue-600 dark:text-blue-400" />
+                )}
               </motion.div>
             </div>
             
             <div className="space-y-2">
-              <h3 className="text-xl font-semibold text-foreground">
-                {isDragOver ? "Drop your image here" : "Choose an image file"}
+              <h3 className={`text-xl font-semibold ${error ? "text-red-600 dark:text-red-400" : "text-foreground"}`}>
+                {error ? "Upload Error" : (isDragOver ? "Drop your image here" : "Choose an image file")}
               </h3>
-              <p className="text-muted-foreground">
-                Supports JPG, PNG, GIF, WebP • Max 10MB
+              <p className={error ? "text-red-500 dark:text-red-300" : "text-muted-foreground"}>
+                {error || "Supports JPG, PNG, GIF, WebP • Max 10MB"}
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex justify-center pt-2">
               <Button
-                onClick={() => document.getElementById('file-input')?.click()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  document.getElementById('file-input')?.click();
+                }}
                 disabled={isUploading}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 hover:shadow-lg"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-2 rounded-lg font-medium transition-all duration-200 hover:shadow-lg"
               >
                 <Upload className="h-4 w-4 mr-2" />
-                {isUploading ? "Processing..." : "Browse Files"}
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="border-border text-foreground hover:bg-accent px-6 py-2 rounded-lg font-medium"
-              >
-                <FileImage className="h-4 w-4 mr-2" />
-                Supported Formats
+                {isUploading ? "Processing..." : (error ? "Try Again" : "Browse Files")}
               </Button>
             </div>
 
